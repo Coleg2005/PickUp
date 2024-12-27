@@ -1,38 +1,33 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '@mui/material';
-import 'Navbar.css';
+import './Navbar.css';
+// import AuthProvider from './Auth.js';
 
 function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <div className="spacing">
-          {/* Logo */}
-          <Link to="/" className="nav-links">
-            Parks <i className="fab fa-typo3" />
-          </Link>
+        {/* Logo */}
+        <a href="/" className="navbar-logo">
+          Home
+        </a>
 
-          {/* Navigation Links */}
-          <div className="flex items-center space-x-8">
-            <Link to="/account" className="nav-links">
-              Account
-            </Link>
-            <Link to="/friends" className="nav-links">
-              Friends
-            </Link>
-            <Link to="/login" className="nav-links">
-              Login
-            </Link>
-            <Button 
-              variant="outlined" 
-              component={Link} 
-              to="/sign-up"
-              className="signup-link"
-            >
-              SIGN UP
-            </Button>
-          </div>
+        {/* Navigation Links */}
+        <div className="nav-links">
+          <a href="/parks" className='nav-item'>
+            Parks
+          </a>
+          <a href="/account" className="nav-item">
+            Account
+          </a>
+          <a href="/friends" className="nav-item">
+            Friends
+          </a>
+          <a href="/login" className="nav-item">
+            Login
+          </a>
+          <a href="/sign-up" className="nav-item signup-button">
+            SIGN UP
+          </a>
         </div>
       </div>
     </nav>

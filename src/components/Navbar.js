@@ -1,15 +1,18 @@
 import React from 'react';
 import './Navbar.css';
-// import AuthProvider from './Auth.js';
+//import { useAuth0 } from '@auth0/auth0-react';
 
 function Navbar() {
+
+  // const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
         {/* Logo */}
         <a href="/" className="navbar-logo">
-          Home
-        </a>
+          <img src="/assets/PickUp-Logo.png" alt="Logo" className="logo-image" />
+      </a>
 
         {/* Navigation Links */}
         <div className="nav-links">
@@ -22,11 +25,8 @@ function Navbar() {
           <a href="/friends" className="nav-item">
             Friends
           </a>
-          <a href="/login" className="nav-item">
-            Login
-          </a>
-          <a href="/sign-up" className="nav-item signup-button">
-            SIGN UP
+          <a href="/login" className="nav-item login-button">
+              Login
           </a>
         </div>
       </div>

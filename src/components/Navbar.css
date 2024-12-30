@@ -24,6 +24,7 @@
   text-decoration: none;
   display: flex;
   align-items: center;
+  border-radius: 30%;
 }
 
 .logo-image {

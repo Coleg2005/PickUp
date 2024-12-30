@@ -11,7 +11,9 @@ function Navbar() {
       <div className="navbar-container">
         {/* Logo */}
         <a href="/" className="navbar-logo">
-          <img src="/assets/PickUp-Logo.png" alt="Logo" className="logo-image" />
+          <div class='Logo-pic'>
+            <img src="/assets/PickUp-Logo.png" alt="Logo" className="logo-image" />
+          </div>
       </a>
 
         {/* Navigation Links */}
@@ -19,11 +21,11 @@ function Navbar() {
           <a href="/parks" className='nav-item'>
             Parks
           </a>
-          <a href="/account" className="nav-item">
-            Account
-          </a>
           <a href="/friends" className="nav-item">
             Friends
+          </a>
+          <a href="/profile" className="nav-item">
+            Profile
           </a>
           <a href="/login" className="nav-item login-button">
               Login

@@ -10,14 +10,14 @@ const Profile = () => {
         <a href='sign-out'>Sign Out</a>
       </div>
 
-      <div class='profile-page'>
-        <h1 class='profile-username'>
+      <div className='profile-page'>
+        <h1 className='profile-username'>
           Fill in with username
         </h1>
-        <div class='profile-page-pic'>
-          <img height='100' width='100' src="/assets/default-pfp.jpg" alt="Profile" className="profile-pic" />
+        <div className='profile-page-pic'>
+          <img src="/assets/default-pfp.jpg" alt="Profile" className="profile-pic" />
         </div>
-        <div class='profile-page-description'>
+        <div className='profile-page-description'>
           <p>Description Here</p>
         </div>
       </div>

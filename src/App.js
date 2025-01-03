@@ -2,9 +2,10 @@ import React from 'react';
 import './App.css';
 import Navbar from './components/Navbar.js';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home.js';
+import About from './pages/About.js';
 import Parks from './pages/Parks.js';
 import Profile from './pages/Profile.js';
+import Friends from './pages/Friends.js';
 
 function App() {
   return (
@@ -12,9 +13,9 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/" exact element={<Home/>} />
-          <Route path="/parks" exact element={<Parks/>}/>
-          <Route path="/friends" exact />
+          <Route path="/" exact element={<Parks/>} />
+          <Route path="/about" exact element={<About/>}/>
+          <Route path="/friends" exact element={<Friends/>}/>
           <Route path="/profile" exact element={<Profile/>}/>
         </Routes>
     </Router> 

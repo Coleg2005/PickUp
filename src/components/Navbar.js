@@ -14,21 +14,23 @@ function Navbar() {
           <div class='Logo-pic'>
             <img src="/assets/PickUp-Logo.png" alt="Logo" className="logo-image" />
           </div>
-      </a>
-
+        </a>
         {/* Navigation Links */}
         <div className="nav-links">
-          <a href="/parks" className='nav-item'>
-            Parks
+          <a href="/about" className="nav-item">
+              About
           </a>
           <a href="/friends" className="nav-item">
             Friends
           </a>
-          <a href="/profile" className="nav-item">
-            Profile
-          </a>
           <a href="/login" className="nav-item login-button">
               Login
+          </a>
+          {/* Profile Picture */}
+          <a href="/profile" className="navbar-pfp">
+          <div class='profile-pic'>
+            <img src="/assets/default-pfp2.jpg" alt="Profile" className="navbar-profile-pic" />
+          </div>
           </a>
         </div>
       </div>

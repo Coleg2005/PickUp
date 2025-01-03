@@ -24,12 +24,18 @@
   text-decoration: none;
   display: flex;
   align-items: center;
-  border-radius: 30%;
 }
 
 .logo-image {
-  height: 60px;
+  height: 50px;
   width: auto;
+  border-radius: 50%;
+}
+
+.navbar-profile-pic {
+  height: 50px;
+  width: auto;
+  border-radius: 50%;
 }
 
 .nav-links {

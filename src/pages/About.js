@@ -1,12 +1,12 @@
 import '../App.css';
 
-const Home = () => {
+const About = () => {
   return (
-    <div className='home'>
-      <div className='home-header'>
+    <div class='about'>
+      <div className='about-header'>
         <h1>Welcome to PickUp!</h1>
       </div>
-      <div className='home-description'>
+      <div className='about-description'>
         <p>
           Find a park near you to play sports with friends!
           <br></br>
@@ -23,4 +23,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default About;

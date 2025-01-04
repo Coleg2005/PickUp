@@ -1,10 +1,10 @@
 import React from 'react';
 import './Navbar.css';
-//import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 function Navbar() {
 
-  // const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const { logout, loginWithRedirect, isAuthenticated } = useAuth0();
 
   return (
     <nav className="navbar">
@@ -23,15 +23,23 @@ function Navbar() {
           <a href="/friends" className="nav-item">
             Friends
           </a>
-          <a href="/login" className="nav-item login-button">
-              Login
-          </a>
-          {/* Profile Picture */}
-          <a href="/profile" className="navbar-pfp">
-          <div class='profile-pic'>
-            <img src="/assets/default-pfp2.jpg" alt="Profile" className="navbar-profile-pic" />
-          </div>
-          </a>
+          { !isAuthenticated ? (
+            <a href="/" className="nav-item login-button" onClick={() => loginWithRedirect()}>
+            Login
+            </a>
+          ) : (
+            <div className="dropdown">
+              <img 
+                src="/assets/default-pfp2.jpg" 
+                alt="Profile" 
+                className="navbar-profile-pic p-dropdown-btn"
+              />
+              <div className="dropdown-content">
+                <a href="/profile">Profile</a>
+                <a href="/" className="logout-button" onClick={() => logout()}>Log Out</a>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </nav>

@@ -48,6 +48,7 @@ body, html {
   border: none;
   cursor: pointer;
   border-radius: 5px;
+  font-family: 'Lexend', sans-serif;
 }
 
 .dropdown-content {
@@ -76,6 +77,7 @@ body, html {
 }
 
 .dropdown:hover .dropdown-btn {
+  color: white;
   background-color: #2980b9;
 }
 

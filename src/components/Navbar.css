@@ -68,3 +68,39 @@
   background-color: #000000;
   color: #9ea8be;
 }
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.p-dropdown-btn {
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 130px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  z-index: 1;
+  border-radius: 5px;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}

@@ -35,6 +35,16 @@ const Parks = () => {
       <Button variant="contained">Search</Button>
       <div className='sports-checkbox'>
         <h3 className='sports-header'>Sports</h3>
+        <div className="dropdown">
+          <Button className="dropdown-btn">Select a Sport</Button>
+          <div className="dropdown-content">
+          <a href="/parks">Basketball</a>
+          <a href="/parks">Pickleball</a>
+          <a href="/parks">Soccer</a>
+          <a href="/parks">Tennis</a>
+          <a href="/parks">Volleyball</a>
+          </div>
+        </div>
         <FormGroup>
           <FormControlLabel control={<Checkbox />} label="Basketball" />
           <FormControlLabel control={<Checkbox />} label="Pickleball" />

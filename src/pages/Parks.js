@@ -1,6 +1,6 @@
 import '../App.css';
 import React from 'react';
-import { Box, Button, Grid, Slider, FormGroup, FormControlLabel, Checkbox, Typography, Input, Switch } from '@mui/material';
+import { Box, Button, Grid, Slider, FormControlLabel, Typography, Input, Switch } from '@mui/material';
 
 const Parks = () => {
 
@@ -38,20 +38,13 @@ const Parks = () => {
         <div className="dropdown">
           <Button className="dropdown-btn">Select a Sport</Button>
           <div className="dropdown-content">
-          <a href="/parks">Basketball</a>
-          <a href="/parks">Pickleball</a>
-          <a href="/parks">Soccer</a>
-          <a href="/parks">Tennis</a>
-          <a href="/parks">Volleyball</a>
+          <a href="/">Basketball</a>
+          <a href="/">Pickleball</a>
+          <a href="/">Soccer</a>
+          <a href="/">Tennis</a>
+          <a href="/">Volleyball</a>
           </div>
         </div>
-        <FormGroup>
-          <FormControlLabel control={<Checkbox />} label="Basketball" />
-          <FormControlLabel control={<Checkbox />} label="Pickleball" />
-          <FormControlLabel control={<Checkbox />} label="Soccer" />
-          <FormControlLabel control={<Checkbox />} label="Tennis" />
-          <FormControlLabel control={<Checkbox />} label="Volleyball" />
-        </FormGroup>
       </div>
       <h3 className='radius-header'>Search Radius (miles)</h3>
       <div className='Radius-slider'>

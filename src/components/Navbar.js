@@ -28,13 +28,13 @@ function Navbar() {
             Login
             </a>
           ) : (
-            <div className="dropdown">
+            <div className="p-dropdown">
               <img 
                 src="/assets/default-pfp2.jpg" 
                 alt="Profile" 
                 className="navbar-profile-pic p-dropdown-btn"
               />
-              <div className="dropdown-content">
+              <div className="p-dropdown-content">
                 <a href="/profile">Profile</a>
                 <a href="/" className="logout-button" onClick={() => logout()}>Log Out</a>
               </div>

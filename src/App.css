@@ -103,6 +103,30 @@ body, html {
 
 .parks {
   display: flex;
+  flex-direction: row;
+  gap: 16px;
+  padding: 16px;
+}
+
+.parks-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
+  padding: 20px;
+  width: 25%;
+}
+
+.parks-display a {
+  color: black;
+  padding: 12px 16px;
+  display: block;
+  border-radius: 5px;
+} 
+
+.parks-settings {
+  display: flex;
   flex-direction: column;
   align-items: left;
   gap: 16px;
@@ -137,6 +161,30 @@ body, html {
 
 .profile-page-description {
   order: 3;
+}
+
+.profile-page-text {
+  order: 3;
+  font-style: 'Lexend', sans-serif;
+  border: 2px solid black;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  text-align: left;
+  vertical-align: top;
+  resize: none;
+  width: 400px;
+  height: 200px;
+}
+
+.profile-page-text::placeholder {
+  font-style: 'Lexend', sans-serif;
+  text-align: left;
+  vertical-align: top;
+}
+
+.edit-icon {
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .search {

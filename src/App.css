@@ -163,18 +163,17 @@ body, html {
   order: 3;
 }
 
-.profile-page-text {
-  order: 3;
-  font-style: 'Lexend', sans-serif;
-  border: 2px solid black;
-  border-radius: 5px;
-  padding: 10px;
-  font-size: 16px;
-  text-align: left;
-  vertical-align: top;
-  resize: none;
+.profile-description-textarea {
   width: 400px;
-  height: 200px;
+  height: 200px; 
+  border-radius: 5px;;
+  border: 2px solid black;
+}
+
+.profile-description-text {
+  order: 3;
+  font-size: 16px;
+  color: black;
 }
 
 .profile-page-text::placeholder {

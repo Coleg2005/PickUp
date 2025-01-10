@@ -161,19 +161,20 @@ body, html {
 
 .profile-page-description {
   order: 3;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 500px;
+  height: 200px;
 }
 
-.profile-description-textarea {
+.profile-description-text-whole {
+  height: 200px;
   width: 400px;
-  height: 200px; 
-  border-radius: 5px;;
-  border: 2px solid black;
-}
-
-.profile-description-text {
-  order: 3;
-  font-size: 16px;
-  color: black;
+  padding: 14px;
+  border-radius: 5px;
+  border: 1px solid black;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
 .profile-page-text::placeholder {
@@ -182,8 +183,34 @@ body, html {
   vertical-align: top;
 }
 
-.edit-icon {
-  color: rgba(0, 0, 0, 0.5);
+.profile-description-textarea {
+  border: none;
+  width: 100%;
+  height: 100%;
+  resize: none;
+  outline: none;
+  font-style: 'Lexend', sans-serif;
+}
+
+.profile-page-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.profile-description-buttons-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  position: relative;
+}
+
+.profile-description-edit, 
+.profile-description-save, 
+.profile-description-cancel {
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
 }
 
 .search {

@@ -1,30 +1,77 @@
 import '../App.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
-import { Button } from '@mui/material';
+import { Button, Snackbar, Alert } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const Profile = () => {
 
-  const { user, isLoading, isAuthenticated } = useAuth0();
+  const { user, isLoading, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [isEditing, setIsEditing] = useState(false);
-  const [description, setDescription] = useState("This is the profile description.");
+  const [description, setDescription] = useState("Description not set");
   const [previousDescription, setPreviousDescription] = useState(description);
+  const [error, setError] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+
+    let isMounted = false;
+    if (user && user.user_metadata && isMounted) {
+      setDescription(user.user_metadata.description || "Description not set");
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
 
   const handleEdit = () => {
     setPreviousDescription(description);
     setIsEditing(true);
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    // Here you could add an API call to save the description
+  const handleSave = async () => {
+
+    if (!process.env.REACT_APP_AUTH0_DOMAIN) {
+      setError('Auth0 configuration is missing')
+      return;
+    }
+
+    setIsSaving(true);
+    setError(null);
+
+    try {
+      const token = await getAccessTokenSilently();
+
+      const response = await fetch(`https://${process.env.REACT_APP_AUTH0_DOMAIN}/api/v2/users/${user.sub}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          user_metadata: { description },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update: ${response.statusText}`);
+      }
+
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error updating description', error);
+      setError(error.message || 'Failed to update description')
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleCancel = () => {
     setDescription(previousDescription);
     setIsEditing(false);
+    setError(null);
   };
 
   const handleKeyDown = (e) => {
@@ -54,7 +101,7 @@ const Profile = () => {
           <img src={user.picture || "/assets/default-pfp.jpg"} alt="Profile" className="profile-page-pic" />
         </div>
         <div className="profile-page-description">
-          <div className="relative">
+          <div className="profile-description-text-whole">
             {isEditing ? (
               <textarea 
                 value={description} 
@@ -70,36 +117,42 @@ const Profile = () => {
               </div>
             )}
           </div>
-          
-          <div className="profile-description-buttons">
-            {isEditing ? (
-              <>
-                <Button onClick={handleCancel} className="profile-description-cancel" aria-label="Cancel editing">
-                  Cancel
-                </Button>
+          <div className="profile-description-buttons-container">
+            <div className="profile-description-buttons">
+              {isEditing ? (
+                <>
+                  <Button
+                    onClick={handleSave}
+                    className="profile-description-save"
+                    aria-label="Save description"
+                  >
+                    <CheckIcon fontSize='small' />
+                    {isSaving ? 'Saving...' : 'Save'}
+                  </Button>
+                  <Button onClick={handleCancel} className="profile-description-cancel" aria-label="Cancel editing" disabeed={isSaving}>
+                    Cancel
+                  </Button>
+                </>
+              ) : (
                 <Button
-                  onClick={handleSave}
-                  className="profile-description-save"
-                  aria-label="Save description"
+                  onClick={handleEdit}
+                  className="profile-description-edit"
+                  aria-label="Edit description"
                 >
-                  <CheckIcon size={16} />
-                  Save
+                  <EditIcon fontSize='small' />
+                  Edit
                 </Button>
-              </>
-            ) : (
-              <Button
-                onClick={handleEdit}
-                className="profile-description-edit"
-                aria-label="Edit description"
-              >
-                <EditIcon size={16} />
-                Edit
-              </Button>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
-
+      
+      <Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError(null)}>
+        <Alert serverity='error' onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

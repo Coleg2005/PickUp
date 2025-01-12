@@ -70,13 +70,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Coleg2005/PickUp.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Coleg2005/PickUp/issues"
-  },
-  "homepage": "https://github.com/Coleg2005/PickUp#readme"
+  "type": "module"
 }

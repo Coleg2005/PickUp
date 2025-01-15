@@ -1,4 +1,5 @@
 import jwt from 'express-jwt';
+import { auth } from 'express-oauth2-jwt-bearer';
 
 // Auth middleware
 export const checkJwt = auth({

@@ -17,6 +17,10 @@ const UserSchema = new mongoose.Schema({
       type: String,
       default: ''
     },
+    picture: {
+      type: String,
+      default: 'public\assets\default-pfp.jpg'
+    }
   },
   createdAt: {
     type: Date,

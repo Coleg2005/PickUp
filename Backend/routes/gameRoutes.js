@@ -3,6 +3,8 @@ import Game from '../models/Game.js';
 import { checkJwt, extractUserId } from '../middleware/auth.js';
 const router = express.Router();
 
+// create a collection of games; 
+
 router.post('/event', checkJwt, async (req, res) => {
 
   

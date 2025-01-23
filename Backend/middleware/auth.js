@@ -15,3 +15,5 @@ export const extractUserId = (req, res, next) => {
   req.auth0Id = auth0Id;
   next();
 };
+
+// mongodb+srv://colegarrison:HowToPickUpPass@pickup.bkqpq.mongodb.net/

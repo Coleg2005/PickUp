@@ -19,6 +19,9 @@ app.use(cors());
 app.use(express.json());
 // Use routes
 app.use('/api/profile', profileRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/game', gameRoutes);
+app.use('/api/friend', friendRoutes);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)

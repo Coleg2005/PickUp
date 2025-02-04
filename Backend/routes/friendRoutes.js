@@ -1,6 +1,6 @@
 import express from 'express';
-import User from '../models/user.js';
-import { checkJwt, extractUserId } from '../middleware/auth.js';
+import User from '../models/User.js';
+import checkJwt from '../middleware/auth.js';
 const router = express.Router();
 
 router.post('/friend', checkJwt, async (req, res) => {
@@ -85,3 +85,5 @@ router.delete('/friend', checkJwt, async (req, res) => {
     res.status(500).json({ error: 'Error deleting friend' });
   }
 });
+
+export default router;

@@ -1,17 +1,16 @@
 import mongoose from 'mongoose';
 
-const UserSchema = new mongoose.Schema({
-  auth0Id: {
-    type: String,
-    required: true,
-    unique: true
-  },
+const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
     unique: true
   },
-  profile: {
+  password: {
+    type: String,
+    required: true,
+  },
+  profile: { 
     location: String,
     description: {
       type: String,
@@ -32,4 +31,9 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('User', UserSchema);
+// Create a compound unique index
+userSchema.index({ username: 1, email: 1 }, { unique: true });
+
+const User = mongoose.model('User', userSchema);
+
+export default User;

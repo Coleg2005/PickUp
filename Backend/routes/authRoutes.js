@@ -1,128 +1,86 @@
 import express from 'express';
-const router = express.router();
+import User from '../models/User.js';
+import bcrypt from 'bcrypt';
+import checkJwt from '../middleware/auth.js';
+const router = express.Router();
+
 
 // Middleware to handle async errors
-const asyncHandler = fn => (req, res, next) => {
-  Promise.resolve(fn(req, res, next)).catch(next);
-};
+// const asyncHandler = fn => (req, res, next) => {
+//   Promise.resolve(fn(req, res, next)).catch(next);
+// };
 
-// Convert callback-based functions to Promise-based
-const loginAsync = (email, password) => {
-  return new Promise((resolve, reject) => {
-    login(email, password, (err, result) => {
-      if (err) reject(err);
-      else resolve(result);
-    });
-  });
-};
-
-const createAsync = (user) => {
-  return new Promise((resolve, reject) => {
-    create(user, (err) => {
-      if (err) reject(err);
-      else resolve();
-    });
-  });
-};
-
-// Login route
-router.post('/login', asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+// Register route works
+router.post('/register', async (req, res) => {
+  try {
+    const { username, password, confirmPassword } = req.body;
   
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password are required' });
+    if (!username || !password || !confirmPassword) {
+      return res.status(400).json({ error: 'username, password, and confirmed password are required' });
+    }
+
+    if (await User.findOne({ username })) {
+      return res.status(400).json({ error: 'Username already taken' });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({ error: 'Passwords do not match' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ username, password: hashedPassword });
+    await user.save();
+
+    res.status(201).json({ message: 'User created successfully' });
+  } catch (error) {
+    console.error('Detailed error:', error);
+    res.status(500).json({ error: "Failed to register", details: error.message });
   }
+});
 
-  const user = await loginAsync(email, password);
-  res.json(user);
-}));
-
-// Register route
-router.post('/register', asyncHandler(async (req, res) => {
-  const { email, password, nickname } = req.body;
+// Login route works
+router.post('/login', async (req, res) => {
+  const { username, password } = req.body;
   
-  if (!email || !password || !nickname) {
-    return res.status(400).json({ error: 'Email, password, and nickname are required' });
+  if (!username || !password) {
+    return res.status(400).json({ error: 'username and password are required' });
   }
 
-  await createAsync({ email, password, nickname, email_verified: false });
-  res.status(201).json({ message: 'User created successfully' });
-}));
-
-// Email verification route
-router.post('/verify-email', asyncHandler(async (req, res) => {
-  const { email } = req.body;
+  if (!await User.findOne({ username })) {
+    return res.status(404).json({ error: 'User not found' });
+  }
   
-  if (!email) {
-    return res.status(400).json({ error: 'Email is required' });
+  const user = await User.findOne({ username });
+
+  // const token = checkJwt(user._id);
+  
+  if (!await bcrypt.compare(password, user.password)) {
+    return res.status(401).json({ error: 'Incorrect password' });
   }
 
-  const verified = await new Promise((resolve, reject) => {
-    verify(email, (err, result) => {
-      if (err) reject(err);
-      else resolve(result);
-    });
-  });
-
-  if (!verified) {
-    return res.status(404).json({ error: 'User not found or already verified' });
-  }
-
-  res.json({ message: 'Email verified successfully' });
-}));
+  return res.json({ message: 'Login successful' });
+});
 
 // Change password route
-router.post('/change-password', asyncHandler(async (req, res) => {
-  const { email, newPassword } = req.body;
+// router.post('/change-password', async (req, res) => {
+//   const { username, newPassword } = req.body;
   
-  if (!email || !newPassword) {
-    return res.status(400).json({ error: 'Email and new password are required' });
-  }
+//   if (!username || !newPassword) {
+//     return res.status(400).json({ error: 'Email and new password are required' });
+//   }
 
-  const updated = await new Promise((resolve, reject) => {
-    changePassword(email, newPassword, (err, result) => {
-      if (err) reject(err);
-      else resolve(result);
-    });
-  });
+//   const updated = await new Promise((resolve, reject) => {
+//     changePassword(email, newPassword, (err, result) => {
+//       if (err) reject(err);
+//       else resolve(result);
+//     });
+//   });
 
-  if (!updated) {
-    return res.status(404).json({ error: 'User not found' });
-  }
+//   if (!updated) {
+//     return res.status(404).json({ error: 'User not found' });
+//   }
 
-  res.json({ message: 'Password changed successfully' });
-}));
-
-// Get user by email route
-router.get('/user/:email', asyncHandler(async (req, res) => {
-  const { email } = req.params;
-  
-  const user = await new Promise((resolve, reject) => {
-    getByEmail(email, (err, result) => {
-      if (err) reject(err);
-      else resolve(result);
-    });
-  });
-
-  if (!user) {
-    return res.status(404).json({ error: 'User not found' });
-  }
-
-  res.json(user);
-}));
-
-// Delete user route
-router.delete('/user/:id', asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  
-  await new Promise((resolve, reject) => {
-    remove(id, (err) => {
-      if (err) reject(err);
-      else resolve();
-    });
-  });
-
-  res.json({ message: 'User deleted successfully' });
-}));
+//   res.json({ message: 'Password changed successfully' });
+// });
 
 export default router;

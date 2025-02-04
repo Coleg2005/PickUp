@@ -2,19 +2,19 @@ import mongoose from 'mongoose';
 
 const GameSchema = new mongoose.Schema({
 
+  name: {
+    type: String,
+    required: true
+  },
   gameMembers: {
     type: [mongoose.Schema.Types.ObjectId],
     default: []
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  createdby: {
+  leader: {
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },
-  plannedFor: {
+  date: {
     type: Date,
     required: true
   },
@@ -28,4 +28,6 @@ const GameSchema = new mongoose.Schema({
   }
 });
  
-module.exports = mongoose.model('Game', GameSchema);
+const Game = mongoose.model('Game', GameSchema);
+
+export default Game;

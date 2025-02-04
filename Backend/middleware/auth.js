@@ -1,19 +1,26 @@
-import { auth } from 'express-oauth2-jwt-bearer';
+import jwt from 'jsonwebtoken';
 
-// Auth middleware
-export const checkJwt = auth({
-  audience: process.env.REACT_APP_AUTH0_AUDIENCE,
-  issuerBaseURL: `https://${process.env.REACT_APP_AUTH0_DOMAIN}`
-});
+// Sedn this when making a call
+// Authorization: Bearer YOUR_JWT_TOKEN
 
-// Middleware to extract user ID from Auth0 token
-export const extractUserId = (req, res, next) => {
-  const auth0Id = req.auth.payload.sub;
-  if (!auth0Id) {
-    return res.status(401).json({ error: 'User ID not found in token' });
+
+// Middleware function to authenticate JWT
+const authenticateJWT = (req, res, next) => {
+  const token = req.header("Authorization");
+
+  if (!token) {
+      return res.status(401).json({ message: "Access denied. No token provided." });
   }
-  req.auth0Id = auth0Id;
-  next();
+
+  try {
+      const secretKey = process.env.JWT_SECRET; // Use environment variables for security
+      const decoded = jwt.verify(token.replace("Bearer ", ""), secretKey);
+      req.user = decoded; // Attach decoded user info to request object
+      next(); // Pass control to the next middleware
+      res.status(200).json({ message: "Token verified" });
+  } catch (error) {
+      res.status(403).json({ message: "Invalid or expired token." });
+  }
 };
 
-// mongodb+srv://colegarrison:HowToPickUpPass@pickup.bkqpq.mongodb.net/
+export default authenticateJWT;

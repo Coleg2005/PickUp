@@ -3,11 +3,12 @@ import React, { useState, useEffect } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import { Button, Snackbar, Alert } from '@mui/material';
-import { useAuth0 } from '@auth0/auth0-react';
+import { updateProfile } from '../api.js';
+// import { useAuth } from '../AuthContext.js';
 
 const Profile = () => {
 
-  const { user, isLoading, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const [user] = useState();
   const [isEditing, setIsEditing] = useState(false);
   const [description, setDescription] = useState("Description not set");
   const [previousDescription, setPreviousDescription] = useState(description);
@@ -33,33 +34,14 @@ const Profile = () => {
 
   const handleSave = async () => {
 
-    if (!process.env.REACT_APP_AUTH0_DOMAIN) {
-      setError('Auth0 configuration is missing')
-      return;
-    }
-
     setIsSaving(true);
     setError(null);
 
     try {
-      const token = await getAccessTokenSilently();
 
-      const response = await fetch(`https://${process.env.REACT_APP_AUTH0_DOMAIN}/api/v2/users/${user.sub}`, {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          user_metadata: { description },
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to update: ${response.statusText}`);
-      }
-
+      const response = updateProfile(description);
       setIsEditing(false);
+      return response;      
     } catch (error) {
       console.error('Error updating description', error);
       setError(error.message || 'Failed to update description')
@@ -82,14 +64,6 @@ const Profile = () => {
       handleCancel();
     }
   };
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  
-  if (!isAuthenticated) {
-    return <div>Please login to view your profile</div>;
-  }
 
   return (
     <div className='profile'>

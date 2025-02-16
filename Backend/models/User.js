@@ -11,7 +11,6 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   profile: { 
-    location: String,
     description: {
       type: String,
       default: ''

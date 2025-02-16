@@ -1,6 +1,6 @@
 import '../App.css';
 import React from 'react';
-import { Box, Button, Grid, Slider, FormControl, FormControlLabel, Typography, Input, InputLabel, Switch, MenuItem, Select } from '@mui/material';
+import { Box, Button, Grid2, Slider, FormControl, FormControlLabel, Typography, Input, InputLabel, Switch, MenuItem, Select } from '@mui/material';
 
 async function FetchData(sport, radius) {
 
@@ -81,8 +81,8 @@ const Parks = () => {
           <Box sx={{ width: 200 }}>
             <Typography id="input-slider" gutterBottom>
             </Typography>
-            <Grid container spacing={2} direction="row" sx={{ alignItems: 'center', mb: 1 }}>
-              <Grid item xs>
+            <Grid2 container spacing={2} direction="row" sx={{ alignItems: 'center', mb: 1 }}>
+              <Grid2 item xs>
                 <Slider 
                   aria-label="Radius" 
                   value={value} 
@@ -91,8 +91,8 @@ const Parks = () => {
                   min={1}
                   max={25}
                 />
-              </Grid>
-              <Grid item>
+              </Grid2>
+              <Grid2 item>
                 <Input
                   value={value}
                   size="small"
@@ -106,8 +106,8 @@ const Parks = () => {
                     'aria-labelledby': 'input-slider',
                   }}
                 />
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Grid2>
           </Box>
         </div>
         <h3 className='team-switch'>Switch to search for courts with existing teams</h3>

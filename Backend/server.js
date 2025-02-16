@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import http from 'http';
@@ -29,8 +31,9 @@ const corsOptions = {
 };
 
 // Middleware
-app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
+app.use(cors(corsOptions));
 
 // Use routes
 app.use('/api/profile', profileRoutes);

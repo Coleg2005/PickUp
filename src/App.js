@@ -6,6 +6,7 @@ import About from './pages/About.js';
 import Parks from './pages/Parks.js';
 import Profile from './pages/Profile.js';
 import Friends from './pages/Friends.js';
+import Login from './pages/Login.js';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/about" exact element={<About/>}/>
           <Route path="/friends" exact element={<Friends/>}/>
           <Route path="/profile" exact element={<Profile/>}/>
+          <Route path="/login" exact element={<Login/>}/>
         </Routes>
     </Router> 
     </>

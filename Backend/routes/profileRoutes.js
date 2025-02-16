@@ -3,15 +3,21 @@ import User from '../models/User.js';
 import checkJwt from '../middleware/auth.js';
 const router = express.Router();
 
-router.post('/updateProfile', checkJwt, async (req, res) => {
+// Update profile works
+
+router.post('/updateProfile', async (req, res) => {
   try {
     const { description, picture, username } = req.body;
-    if (!description || !picture) {
-      return res.status(400).json({ error: 'profile is required' });
+    if (!username) {
+      return res.status(400).json({ error: 'username is required' });
     }
     const user = await User.findOne({ username });
-    user.description = description;
-    user.picture = picture;
+    if(description) {
+      user.profile.description = description;
+    }
+    if(picture) {
+      user.profile.picture = picture;
+    }
     await user.save();
     res.json({ message: 'Profile updated successfully' });
   } catch {

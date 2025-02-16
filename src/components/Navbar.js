@@ -1,14 +1,15 @@
 import React from 'react';
 import './Navbar.css';
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth } from '../AuthContext.js';
 
 function Navbar() {
 
-  const { logout, loginWithRedirect, isAuthenticated, isLoading, user } = useAuth0();
+  const { user, setUser } = useAuth();    
 
-  if (isLoading) {
-    return <div className='nav-item login-button'>Loading...</div>;
-  }
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    setUser(null); // Clear user from context
+  };
 
   return (
     <nav className="navbar">
@@ -24,11 +25,11 @@ function Navbar() {
           <a href="/about" className="nav-item">
               About
           </a>
-          <a href="/friends" className="nav-item">
+          {/* <a href="/friends" className="nav-item">
             Friends
-          </a>
-          { !isAuthenticated ? (
-            <a href="/" className="nav-item login-button" onClick={() => loginWithRedirect()}>
+          </a> */}
+          { !user ? (
+            <a href="/Login" className="nav-item login-button">
             Login
             </a>
           ) : (
@@ -40,7 +41,7 @@ function Navbar() {
               />
               <div className="p-dropdown-content">
                 <a href="/profile">Profile</a>
-                <a href="/" className="logout-button" onClick={() => logout()}>Log Out</a>
+                <a href="/" className="logout-button" onClick={() => handleLogout()}>Log Out</a>
               </div>
             </div>
           )}

@@ -1,14 +1,15 @@
 import express from 'express';
 import User from '../models/User.js';
 import bcrypt from 'bcrypt';
-import checkJwt from '../middleware/auth.js';
+import jwt from 'jsonwebtoken';
+import authenticateJwt from '../middleware/auth.js';
 const router = express.Router();
 
-
-// Middleware to handle async errors
-// const asyncHandler = fn => (req, res, next) => {
-//   Promise.resolve(fn(req, res, next)).catch(next);
-// };
+const generateToken = (user) => {
+  return jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
+    expiresIn: '1h' 
+  });
+};
 
 // Register route works
 router.post('/register', async (req, res) => {
@@ -51,14 +52,30 @@ router.post('/login', async (req, res) => {
   }
   
   const user = await User.findOne({ username });
-
-  // const token = checkJwt(user._id);
-  
+ 
   if (!await bcrypt.compare(password, user.password)) {
     return res.status(401).json({ error: 'Incorrect password' });
   }
 
+  const token = generateToken(user);
+
+  res.cookie('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict'
+  });
+ 
+
   return res.json({ message: 'Login successful' });
+});
+
+router.get('/check', authenticateJwt, (req, res) => {
+  res.json({ isAuthenticated: true, user: req.user });
+});
+
+router.post('/logout', (req, res) => {
+  res.clearCookie('token');
+  res.json({ message: 'Logged out' });
 });
 
 // Change password route

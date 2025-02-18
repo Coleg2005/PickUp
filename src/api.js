@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3001/';
+const BASE_URL = 'http://localhost:3001';
 
 const AUTH_URL = `${BASE_URL}/api/auth`;
 const GAME_URL = `${BASE_URL}/api/game`;
@@ -17,6 +17,7 @@ export const register = async (username, password, confirmPassword) => {
       password,
       confirmPassword,
     });
+    response.ok = true;
     return response.data;
   } catch (e) {
     throw e.response.data;
@@ -29,6 +30,7 @@ export const login = async (username, password) => {
       username,
       password,
     });
+    response.ok = true;
     return response.data;
   } catch (e) {
     throw e.response.data;
@@ -44,6 +46,7 @@ export const updateProfile = async (description, picture, username) => {
       picture,
       username,
     });
+    response.ok = true;
     return response.data;
   } catch (e) {
     throw e.response.data;
@@ -62,6 +65,7 @@ export const createGame = async (name, leader, time, court, sport) => {
       court,
       sport,
     });
+    response.ok = true;
     return response.data;
   } catch (e) {
     throw e.response.data;
@@ -74,6 +78,7 @@ export const deleteGame = async ( name, location) => {
       name,
       location
     });
+    response.ok = true;
     return response.data;
   } catch (e) {
     throw e.response.data;
@@ -85,6 +90,7 @@ export const getGames = async ( location ) => {
     const response = await axios.get(GAME_URL, {
       location
     });
+    response.ok = true;
     return response.data;
   } catch (e) {
     throw e.response.data;
@@ -98,6 +104,7 @@ export const addGameMember = async (name, location, user) => {
       location,
       user,
     });
+    response.ok = true;
     return response.data;
   } catch (e) {
     throw e.response.data;
@@ -109,6 +116,7 @@ export const removeGameMember = async ( username ) => {
     const response = await axios.delete(GAME_URL, {
       username,
       });
+      response.ok = true;
     return response.data;
   } catch (e) {
     throw e.response.data;

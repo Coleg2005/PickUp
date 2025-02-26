@@ -36,6 +36,7 @@ app.use(cookieParser());
 app.use(cors(corsOptions));
 
 // Use routes
+app.use('/api/cookies', cookieRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/game', gameRoutes);

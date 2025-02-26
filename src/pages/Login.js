@@ -1,56 +1,84 @@
 import '../App.css';
 import { Alert, TextField, Button } from '@mui/material';
-import React,{ useState } from 'react';
-import { register, login } from '../api.js';
+import React,{ useState, useEffect } from 'react';
+import { register, login, saveUser } from '../api.js';
+import { useAuth } from '../AuthContext.js';
 
 const Login = () => {
 
+  // react consts
   const [isError, switchError] = useState(0);
   const [errorMsg, setErrorMsg] = useState('');
   const [signup, setsignup] = useState(0);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const { user, setUser } = useAuth();
 
+  // effect for debugging
+  useEffect(() => {
+    console.log('Current user state:', user);
+  }, [user]);
+
+  // switches the react const between signup and login
   const signupSwitch = () => {
     setsignup((prev) => prev === 0 ? 1 : 0);
   }
 
+  // switches the react const if there is/isnt an erro
   const errorSwitch = () => {
     switchError((prev) => prev === 0 ? 1 : 0);
   }
 
+  // login
   const handleLogin = async () => {
     try {
+      // calls the api to login the user
       const response = await login(username, password);
-      console.log("Successfully Logged In", response);
+      // logs response for debugging
+      console.log('Raw login response:', response);
+      // saves a user using auth
+      const userData = {
+        username: response.username
+      };
+      setUser(userData);
+      // log for debugging
+      console.log("Successfully Logged In - userData:", userData);
+      // redirects to parks page as they are done logging in
       window.location.href = '/';
     } catch (error) {
       console.error('Error logging in', error);
+      // displays the error message for the user
       const errorMessage = error.error || 'An unknown error occurred';
       setErrorMsg(errorMessage);
       errorSwitch();
     }
   }
 
+  // handle register
   const handleRegister = async () => {
     try {
+      // checks thet all fields are there
       if(!username || !password || !confirmPassword){
         console.error('Please fill out all fields');
         return;
       }
+      // calls api to register
       const response = await register(username, password, confirmPassword);
-
+      // logs for debugging
       console.log("Registered Successfully", response);
+      // redirects to parks
       window.location.href = '/';
     } catch (error) {
       console.error('Error registering', error);
+      // displays error for user
       const errorMessage = error.error || 'An unknown error occurred';
       setErrorMsg(errorMessage);
       errorSwitch();
     }
   }
 
+  // changes user 
   const handleUserChange = (event) => {
     setUsername(event.target.value);
     if(isError === 1){
@@ -58,6 +86,7 @@ const Login = () => {
     }
   };
 
+  // change password
   const handlePassChange = (event) => {
     setPassword(event.target.value);
     if(isError === 1){
@@ -65,6 +94,7 @@ const Login = () => {
     }
   };
 
+  // change confirm password
   const handleConPassChange = (event) => {
     setConfirmPassword(event.target.value);
     if(isError === 1){

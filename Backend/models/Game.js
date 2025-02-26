@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+// general schema, think sample game
+
 const GameSchema = new mongoose.Schema({
 
   name: {

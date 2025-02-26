@@ -2,9 +2,11 @@ import express from 'express';
 import User from '../models/User.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import authenticateJwt from '../middleware/auth.js';
+import checkJwt from '../middleware/auth.js';
+import { deleteCookie } from '../../src/api.js'
 const router = express.Router();
 
+// Generates a random token with user info and secret key that expires within an hour
 const generateToken = (user) => {
   return jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
     expiresIn: '1h' 
@@ -14,24 +16,30 @@ const generateToken = (user) => {
 // Register route works
 router.post('/register', async (req, res) => {
   try {
+    // gets the info from req
     const { username, password, confirmPassword } = req.body;
-  
+    
+    // checks that info is present
     if (!username || !password || !confirmPassword) {
       return res.status(400).json({ error: 'username, password, and confirmed password are required' });
     }
 
+    // checks if username is already exists
     if (await User.findOne({ username })) {
       return res.status(400).json({ error: 'Username already taken' });
     }
 
+    // checks that password confirmation matched
     if (password !== confirmPassword) {
       return res.status(400).json({ error: 'Passwords do not match' });
     }
 
+    // hashes the password and saves the user info as a user schema
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({ username, password: hashedPassword });
     await user.save();
 
+    // on completeion sends sucess
     res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
     console.error('Detailed error:', error);
@@ -41,41 +49,58 @@ router.post('/register', async (req, res) => {
 
 // Login route works
 router.post('/login', async (req, res) => {
+  // saves req info as const
   const { username, password } = req.body;
   
+  // checks if info is there
   if (!username || !password) {
     return res.status(400).json({ error: 'username and password are required' });
   }
 
+  // checks if user doesnt exist
   if (!await User.findOne({ username })) {
     return res.status(404).json({ error: 'User not found' });
   }
   
+  // gets user from db
   const user = await User.findOne({ username });
  
+  // if the entered password and db password dont match return error
   if (!await bcrypt.compare(password, user.password)) {
     return res.status(401).json({ error: 'Incorrect password' });
   }
 
+  // if it does match create token
   const token = generateToken(user);
 
+  // saves the created token as a cookie
   res.cookie('token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict'
   });
  
-
-  return res.json({ message: 'Login successful' });
+  // returns a success message and user info for debugging
+  return res.json({ 
+    message: 'Login successful',
+    username: username,
+    password: password
+  });
 });
 
-router.get('/check', authenticateJwt, (req, res) => {
-  res.json({ isAuthenticated: true, user: req.user });
-});
-
-router.post('/logout', (req, res) => {
-  res.clearCookie('token');
+// logout route
+router.post('/logout', () => {
+  // deletes cookie and sends log out message
+  deleteCookie('token');
   res.json({ message: 'Logged out' });
+});
+
+router.get('/check', checkJwt, (req, res) => {
+  if (req.user) {
+    res.json({ user: req.user });
+  } else {
+    res.status(401).json({ user: null });
+  }
 });
 
 // Change password route

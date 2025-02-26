@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Update profile works
 
-router.post('/updateProfile', async (req, res) => {
+router.post('/updateProfile',checkJwt, async (req, res) => {
   try {
     const { description, picture, username } = req.body;
     if (!username) {

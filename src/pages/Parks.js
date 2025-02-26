@@ -81,15 +81,15 @@ const Parks = () => {
           <Box sx={{ width: 200 }}>
             <Typography id="input-slider" gutterBottom>
             </Typography>
-            <Grid2 container spacing={2} direction="row" sx={{ alignItems: 'center', mb: 1 }}>
-              <Grid2 item xs>
+            <Grid2 container spacing={2} direction="row" sx={{ alignItems: 'center' }}>
+              <Grid2 item xs={12}>
                 <Slider 
-                  aria-label="Radius" 
-                  value={value} 
+                  value={typeof value === 'number' ? value : 0}
                   onChange={handleSliderChange}
-                  valueLabelDisplay="auto"
+                  aria-labelledby="Radius"
                   min={1}
                   max={25}
+                  sx={{ width: "100%" }}
                 />
               </Grid2>
               <Grid2 item>

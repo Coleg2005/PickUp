@@ -7,7 +7,6 @@ function Navbar() {
   const { user, setUser } = useAuth();    
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
     setUser(null); // Clear user from context
   };
 

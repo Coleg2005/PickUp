@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
-import cookieParser from 'cookie-parser';
+// import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import http from 'http';
@@ -12,6 +12,7 @@ import profileRoutes from './routes/profileRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import gameRoutes from './routes/gameRoutes.js';
 import friendRoutes from './routes/friendRoutes.js';
+// import cookieRoutes from './routes/cookieRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,11 +33,11 @@ const corsOptions = {
 
 // Middleware
 app.use(express.json());
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(cors(corsOptions));
 
 // Use routes
-app.use('/api/cookies', cookieRoutes);
+// app.use('/api/cookies', cookieRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/game', gameRoutes);

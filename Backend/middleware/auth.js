@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 const checkJwt = (req, res, next) => {
 
   // checks that token was created in the cookies
-  const token = req.cookies.token;
+  // const token = req.cookies.token;
 
   // if no token, no access
   if (!token) {

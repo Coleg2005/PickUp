@@ -3,7 +3,7 @@ import User from '../models/User.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import checkJwt from '../middleware/auth.js';
-import { deleteCookie } from '../../src/api.js'
+// import { deleteCookie } from '../../src/api.js'
 const router = express.Router();
 
 // Generates a random token with user info and secret key that expires within an hour
@@ -73,12 +73,15 @@ router.post('/login', async (req, res) => {
   // if it does match create token
   const token = generateToken(user);
 
-  // saves the created token as a cookie
-  res.cookie('token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict'
-  });
+  sessionStorage.setItem('token', token);
+  sessionStorage.setItem('user', user);
+
+  // // saves the created token as a cookie
+  // res.cookie('token', token, {
+  //   httpOnly: true,
+  //   secure: process.env.NODE_ENV === 'production',
+  //   sameSite: 'strict'
+  // });
  
   // returns a success message and user info for debugging
   return res.json({ 
@@ -91,15 +94,25 @@ router.post('/login', async (req, res) => {
 // logout route
 router.post('/logout', () => {
   // deletes cookie and sends log out message
-  deleteCookie('token');
-  res.json({ message: 'Logged out' });
+  // res.clearCookie('token');
+  // res.clearCookie('userData');
+  sessionStorage.clear();
+  return res.json({ message: 'Logged out successfully'});
 });
 
 router.get('/check', checkJwt, (req, res) => {
-  if (req.user) {
-    res.json({ user: req.user });
-  } else {
-    res.status(401).json({ user: null });
+
+  // const token = req.cookies.token;
+
+  if(!token) {
+    return res.json({ user:null });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    res.json({ user: { username: decoded.username } });
+  } catch (error) {
+    res.json({ user: null });
   }
 });
 

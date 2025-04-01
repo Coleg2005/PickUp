@@ -3,7 +3,7 @@ import checkJwt from '../middleware/auth.js';
 const router = express.Router();
 
 // Get specific cookies
-router.get("/get/:name", authenticateJwt, (req, res) => {
+router.get("/get/:name", checkJwt, (req, res) => {
   const cookieName = req.params.name;
   
   if (!req.cookies[cookieName]) {
@@ -50,10 +50,11 @@ router.delete("/delete", checkJwt, (req, res) => {
 router.post("/save-user", checkJwt, (req, res) => {
   try {
     // Since the route is protected by checkJwt, we know req.user is available
-    const userData = {
-      id: req.user.id,
-      username: req.user.username
-    };
+    const userData = req.body;
+
+    if (!userData || ! userData.username) {
+      return res.status(400).json({ error: 'Valid user data is required' });
+    }
     
     // Save the user data as a cookie
     res.cookie('userData', JSON.stringify(userData), {

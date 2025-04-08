@@ -14,11 +14,11 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/" exact element={<Parks/>} />
+          <Route path="/home" exact element={<Parks/>} />
           <Route path="/about" exact element={<About/>}/>
           <Route path="/friends" exact element={<Friends/>}/>
           <Route path="/profile" exact element={<Profile/>}/>
-          <Route path="/login" exact element={<Login/>}/>
+          <Route path="/" exact element={<Login/>}/>
         </Routes>
     </Router> 
     </>

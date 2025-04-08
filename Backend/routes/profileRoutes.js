@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Update profile works
 
-router.post('/updateProfile',checkJwt, async (req, res) => {
+router.post('/updateProfile', async (req, res) => {
   try {
     const { description, picture, username } = req.body;
     if (!username) {
@@ -15,10 +15,11 @@ router.post('/updateProfile',checkJwt, async (req, res) => {
     if(description) {
       user.profile.description = description;
     }
-    if(picture) {
+    if(picture != 1) {
       user.profile.picture = picture;
     }
     await user.save();
+    console.log('all good here')
     res.json({ message: 'Profile updated successfully' });
   } catch {
     res.status(500).json({ error: 'Error updating profile' });

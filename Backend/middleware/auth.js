@@ -3,9 +3,6 @@ import jwt from 'jsonwebtoken';
 // Middleware function to authenticate JWT
 const checkJwt = (req, res, next) => {
 
-  // checks that token was created in the cookies
-  // const token = req.cookies.token;
-
   // if no token, no access
   if (!token) {
     return res.status(401).json({ isAuthenticated: false, message: "Access denied. No token provided." });

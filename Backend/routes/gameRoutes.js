@@ -6,7 +6,6 @@ const router = express.Router();
 
 
 // Create game works
-
 router.post('/game', async (req, res) => {
 
   try {
@@ -29,7 +28,6 @@ router.post('/game', async (req, res) => {
 });
 
 // get games for location works
-
 router.get('/game', async (req, res) => {
 
   try {
@@ -45,7 +43,6 @@ router.get('/game', async (req, res) => {
 });
 
 // delete game works
-
 router.delete('/game', async (req, res) => {
   try {
     const { name, location } = req.body;
@@ -61,7 +58,6 @@ router.delete('/game', async (req, res) => {
 });
 
 // add game member works
-
 router.post('/gameMember', async (req, res) => {
   try {
     const { name, location, gameMember } = req.body;
@@ -106,7 +102,6 @@ router.post('/gameMembers', async (req, res) => {
 });
 
 // remove game member works 
-
 router.delete('/gameMember', async (req, res) => {
   try {
     const { name, location, gameMember } = req.body;

@@ -1,5 +1,5 @@
 import '../App.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState, /*useEffect*/ } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import { Button, Snackbar, Alert } from '@mui/material';
@@ -8,24 +8,26 @@ import { updateProfile } from '../api.js';
 
 const Profile = () => {
 
-  const [user] = useState();
+  // const [user] = useState();
+  const user = JSON.parse(sessionStorage.getItem('user'));
   const [isEditing, setIsEditing] = useState(false);
-  const [description, setDescription] = useState("Description not set");
+  const [description, setDescription] = useState(user.user.profile.description);
   const [previousDescription, setPreviousDescription] = useState(description);
   const [error, setError] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
+  
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    let isMounted = false;
-    if (user && user.user_metadata && isMounted) {
-      setDescription(user.user_metadata.description || "Description not set");
-    }
+  //   let isMounted = false;
+  //   if (user && user.user && isMounted) {
+  //     setDescription(user.user.profile.description || "Description not set");
+  //   }
 
-    return () => {
-      isMounted = false;
-    };
-  }, [user]);
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, [user]);
 
   const handleEdit = () => {
     setPreviousDescription(description);
@@ -38,10 +40,12 @@ const Profile = () => {
     setError(null);
 
     try {
-
-      const response = updateProfile(description);
+      const response = updateProfile(description, 1, user.user.username);
+      user.user.profile.description = description;
+      sessionStorage.setItem('user', JSON.stringify(user));
       setIsEditing(false);
-      return response;      
+      setDescription(description)
+      return response;
     } catch (error) {
       console.error('Error updating description', error);
       setError(error.message || 'Failed to update description')
@@ -69,10 +73,10 @@ const Profile = () => {
     <div className='profile'>
       <div className='profile-page'>
         <h1 className='profile-username'>
-          {user.name}
+          {user.user.username}
         </h1>
         <div className='profile-page-pic'>
-          <img src={user.picture || "/assets/default-pfp.jpg"} alt="Profile" className="profile-page-pic" />
+          <img src={user.user && user.user.picture ? user.user.picture : "/assets/default-pfp.jpg"} alt="Profile" className="profile-page-pic" />
         </div>
         <div className="profile-page-description">
           <div className="profile-description-text-whole">
@@ -87,7 +91,7 @@ const Profile = () => {
               />
             ) : (
               <div className="profile-description-text">
-                {description || "No description provided"}
+                {user.user.description || description || "No description provided"}
               </div>
             )}
           </div>
@@ -103,7 +107,7 @@ const Profile = () => {
                     <CheckIcon fontSize='small' />
                     {isSaving ? 'Saving...' : 'Save'}
                   </Button>
-                  <Button onClick={handleCancel} className="profile-description-cancel" aria-label="Cancel editing" disabeed={isSaving}>
+                  <Button onClick={handleCancel} className="profile-description-cancel" aria-label="Cancel editing" disabled={isSaving}>
                     Cancel
                   </Button>
                 </>

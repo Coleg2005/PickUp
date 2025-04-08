@@ -52,7 +52,7 @@ const Login = () => {
       // }
 
       // redirects to parks page as they are done logging in
-      window.location.href = '/';
+      window.location.href = '/home';
     } catch (error) {
       console.error('Error logging in', error);
       // displays the error message for the user
@@ -85,7 +85,7 @@ const Login = () => {
       console.log("Registered Successfully", response);
 
       // redirects to parks
-      window.location.href = '/login';
+      window.location.href = '/home';
 
     } catch (error) {
       console.error('Error registering', error);

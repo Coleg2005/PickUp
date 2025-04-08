@@ -17,18 +17,19 @@ function Navbar() {
   };
 
   const user = JSON.parse(sessionStorage.getItem('user'));
-  console.log(user.user.profile.picture);
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <h1 className="nav-item">Hello, {user.user.username}</h1>
-        {/* Logo */}
-        <a href="/" className="navbar-logo">
-          <div className='Logo-pic'>
-            <img src="/assets/PickUp-Logo.png" alt="Logo" className="logo-image" />
-          </div>
-        </a>
+        <div>
+          {/* <h1 className="nav-item">Hello, {user ? user.user.username : "Guest"}</h1> */}
+          {/* Logo */}
+          <a href="/home" className="navbar-logo">
+            <div className='Logo-pic'>
+              <img src="/assets/PickUp-Logo.png" alt="Logo" className="logo-image" />
+            </div>
+          </a>
+        </div>
         {/* Navigation Links */}
         <div className="nav-links">
           <a href="/about" className="nav-item">
@@ -38,7 +39,7 @@ function Navbar() {
             Friends
           </a> */}
           { !('user' in sessionStorage) ? (
-            <a href="/Login" className="nav-item login-button">
+            <a href="/" className="nav-item login-button">
             Login
             </a>
           ) : (
@@ -50,7 +51,7 @@ function Navbar() {
               />
               <div className="p-dropdown-content">
                 <a href="/profile">Profile</a>
-                <a href="/" className="logout-button" onClick={() => handleLogout()}>Log Out</a>
+                <a href="/login" className="logout-button" onClick={() => handleLogout()}>Log Out</a>
               </div>
             </div>
           )}

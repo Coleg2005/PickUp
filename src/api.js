@@ -113,7 +113,7 @@ export const check = async (credentials) => {
 // Profile Routes
 export const updateProfile = async (description, picture, username) => {
   try {
-    const response = await axios.post(PROFILE_URL, {
+    const response = await axios.post(`${PROFILE_URL}/updateProfile`, {
       description,
       picture,
       username,

@@ -70,31 +70,34 @@ router.post('/login', async (req, res) => {
     return res.status(401).json({ error: 'Incorrect password' });
   }
 
+  
+
   // if it does match create token
   const token = generateToken(user);
 
-  sessionStorage.setItem('token', token);
-  sessionStorage.setItem('user', user);
+  // sessionStorage.setItem('token', token);
+  // sessionStorage.setItem('user', user);
 
-  // // saves the created token as a cookie
-  // res.cookie('token', token, {
-  //   httpOnly: true,
-  //   secure: process.env.NODE_ENV === 'production',
-  //   sameSite: 'strict'
-  // });
+  // saves the created token as a cookie
+  res.cookie('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict'
+  });
  
   // returns a success message and user info for debugging
   return res.json({ 
     message: 'Login successful',
-    username: username,
-    password: password
+    user: user
+    // username: username,
+    // password: password
   });
 });
 
 // logout route
 router.post('/logout', () => {
   // deletes cookie and sends log out message
-  // res.clearCookie('token');
+  res.clearCookie('token');
   // res.clearCookie('userData');
   sessionStorage.clear();
   return res.json({ message: 'Logged out successfully'});
@@ -102,18 +105,20 @@ router.post('/logout', () => {
 
 router.get('/check', checkJwt, (req, res) => {
 
+  res.json({ isAuthenticated: true, user: req.user });
+
   // const token = req.cookies.token;
 
-  if(!token) {
-    return res.json({ user:null });
-  }
+  // if(!token) {
+  //   return res.json({ user:null });
+  // }
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    res.json({ user: { username: decoded.username } });
-  } catch (error) {
-    res.json({ user: null });
-  }
+  // try {
+  //   const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  //   res.json({ user: { username: decoded.username } });
+  // } catch (error) {
+  //   res.json({ user: null });
+  // }
 });
 
 // Change password route

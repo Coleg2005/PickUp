@@ -1,18 +1,28 @@
 import React from 'react';
 import './Navbar.css';
 import { useAuth } from '../AuthContext.js';
+import { logout } from '../api.js';
 
 function Navbar() {
 
-  const { user, setUser } = useAuth();    
+  const { setUser } = useAuth();    
 
   const handleLogout = async () => {
-    setUser(null); // Clear user from context
+    try {
+      await logout();
+      setUser(null);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
+
+  const user = JSON.parse(sessionStorage.getItem('user'));
+  console.log(user.user.profile.picture);
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
+        <h1 className="nav-item">Hello, {user.user.username}</h1>
         {/* Logo */}
         <a href="/" className="navbar-logo">
           <div className='Logo-pic'>
@@ -27,14 +37,14 @@ function Navbar() {
           {/* <a href="/friends" className="nav-item">
             Friends
           </a> */}
-          { !user ? (
+          { !('user' in sessionStorage) ? (
             <a href="/Login" className="nav-item login-button">
             Login
             </a>
           ) : (
             <div className="p-dropdown">
               <img 
-                src={user.picture || "/assets/default-pfp2.jpg"}
+                src={user.user.profile.picture || "/assets/default-pfp.jpg"}
                 alt="Profile" 
                 className="navbar-profile-pic p-dropdown-btn"
               />

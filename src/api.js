@@ -2,58 +2,58 @@ import axios from 'axios';
 
 const BASE_URL = 'http://localhost:3001';
 
-const COOKIE_URL = `${BASE_URL}/api/cookie`;  
+// const COOKIE_URL = `${BASE_URL}/api/cookies`;  
 const AUTH_URL = `${BASE_URL}/api/auth`;
 const GAME_URL = `${BASE_URL}/api/game`;
 // const FRIENDS_URL = `${BASE_URL}/api/friend`;
 const PROFILE_URL = `${BASE_URL}/api/profile`;
 
-// Cookie Routes
+// // Cookie Routes
 
-export const getCookie = async (name) => {
-  try {
-    const response = await axios.get(`${COOKIE_URL}/get/:name`, {
-      name,
-    });
-    return response.data;
-  } catch (e) {
-    throw e.response.data;
-  }
-}
+// export const getCookie = async (name) => {
+//   try {
+//     const response = await axios.get(`${COOKIE_URL}/get/:name`, {
+//       name,
+//     });
+//     return response.data;
+//   } catch (e) {
+//     throw e.response.data;
+//   }
+// }
 
-export const setCookie = async (name, value) => {
-  try {
-    const response = await axios.post(`${COOKIE_URL}/set`, {
-      name,
-      value,
-    });
-    return response.data;
-  } catch (e) {
-    throw e.response.data;
-  }
-}
+// export const setCookie = async (name, value) => {
+//   try {
+//     const response = await axios.post(`${COOKIE_URL}/set`, {
+//       name,
+//       value,
+//     });
+//     return response.data;
+//   } catch (e) {
+//     throw e.response.data;
+//   }
+// }
 
-export const deleteCookie = async (name) => {
-  try {
-    const response = await axios.delete(`${COOKIE_URL}/delete`, {
-      name,
-    });
-    return response.data;
-  } catch (e) {
-    throw e.response.data;
-  }
-}
+// export const deleteCookie = async (name) => {
+//   try {
+//     const response = await axios.delete(`${COOKIE_URL}/delete`, {
+//       name,
+//     });
+//     return response.data;
+//   } catch (e) {
+//     throw e.response.data;
+//   }
+// }
 
-export const saveUser = async (userData) => {
-  try {
-    const response = await axios.post(`${COOKIE_URL}/save-user`, {
-      userData,
-    });
-    return response.data;
-  } catch (e) {
-    throw e.response.data;
-  }
-}
+// export const saveUser = async (userData) => {
+//   try {
+//     const response = await axios.post(`${COOKIE_URL}/save-user`, {
+//       userData
+//     }, { withCredentials: true });
+//     return response.data;
+//   } catch (e) {
+//     throw e.response.data;
+//   }
+// }
 
 // Auth Routes
 
@@ -66,7 +66,8 @@ export const register = async (username, password, confirmPassword) => {
       confirmPassword,
     });
 
-    saveUser(response.data);
+    // saveUser(response.data);
+    response.ok = true;
     return response.data;
   } catch (e) {
     throw e.response.data;
@@ -77,9 +78,12 @@ export const login = async (username, password) => {
   try {
     const response = await axios.post(`${AUTH_URL}/login`, {
       username,
-      password,
-    });
-    
+      password
+    }, { withCredentials: true });
+
+    sessionStorage.setItem('user', JSON.stringify(response.data));
+            
+    response.ok = true;
     return response.data;
   } catch (e) {
     throw e.response.data;
@@ -88,7 +92,9 @@ export const login = async (username, password) => {
 
 export const logout = async (name) => {
   try {
-    const response = await axios.post(`${AUTH_URL}/logout`, name);
+    const response = await axios.post(`${AUTH_URL}/logout`, {},
+      { withCredentials: true }
+    );
     return response.data;
   } catch (e) {
     throw e.response.data;
@@ -103,8 +109,8 @@ export const check = async (credentials) => {
     throw e.response.data;
   }
 }
-// Profile Routes
 
+// Profile Routes
 export const updateProfile = async (description, picture, username) => {
   try {
     const response = await axios.post(PROFILE_URL, {

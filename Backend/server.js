@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
-// import cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import http from 'http';
@@ -33,11 +33,10 @@ const corsOptions = {
 
 // Middleware
 app.use(express.json());
-// app.use(cookieParser());
+app.use(cookieParser());
 app.use(cors(corsOptions));
 
 // Use routes
-// app.use('/api/cookies', cookieRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/game', gameRoutes);

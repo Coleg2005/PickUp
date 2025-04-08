@@ -1,8 +1,8 @@
 import '../App.css';
 import { Alert, TextField, Button } from '@mui/material';
-import React,{ useState, useEffect } from 'react';
-import { register, login, saveUser } from '../api.js';
-import { useAuth } from '../AuthContext.js';
+import React,{ useState/*, useEffect*/ } from 'react';
+import { register, login /*, saveUser */} from '../api.js';
+// import { useAuth } from '../AuthContext.js';
 
 const Login = () => {
 
@@ -13,12 +13,12 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const { user, setUser } = useAuth();
+  // const { user, setUser } = useAuth();
 
   // effect for debugging
-  useEffect(() => {
-    console.log('Current user state:', user);
-  }, [user]);
+  // useEffect(() => {
+  //   console.log('Current user state:', user);
+  // }, [user]);
 
   // switches the react const between signup and login
   const signupSwitch = () => {
@@ -41,9 +41,16 @@ const Login = () => {
       const userData = {
         username: response.username
       };
-      setUser(userData);
       // log for debugging
       console.log("Successfully Logged In - userData:", userData);
+
+      
+      // setUser(userData);
+      // saveUser(userData);
+      // if('user' in sessionStorage) {
+      //   console.log('hello')
+      // }
+
       // redirects to parks page as they are done logging in
       window.location.href = '/';
     } catch (error) {
@@ -65,10 +72,21 @@ const Login = () => {
       }
       // calls api to register
       const response = await register(username, password, confirmPassword);
+      
+      // saes user data
+      // const userData = {
+      //   username: response.username
+      // };
+
+      // setUser(userData);
+      // saveUser(userData);
+
       // logs for debugging
       console.log("Registered Successfully", response);
+
       // redirects to parks
-      window.location.href = '/';
+      window.location.href = '/login';
+
     } catch (error) {
       console.error('Error registering', error);
       // displays error for user

@@ -29,9 +29,8 @@ router.post('/game', async (req, res) => {
 
 // get games for location works
 router.get('/game', async (req, res) => {
-
   try {
-    const { location } = req.body;
+    const { location } = req.query;
     if (!location) {
       return res.status(400).json({ error: 'location is required' });
     }

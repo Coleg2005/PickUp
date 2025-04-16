@@ -2,58 +2,10 @@ import axios from 'axios';
 
 const BASE_URL = 'http://localhost:3001';
 
-// const COOKIE_URL = `${BASE_URL}/api/cookies`;  
 const AUTH_URL = `${BASE_URL}/api/auth`;
 const GAME_URL = `${BASE_URL}/api/game`;
 // const FRIENDS_URL = `${BASE_URL}/api/friend`;
 const PROFILE_URL = `${BASE_URL}/api/profile`;
-
-// // Cookie Routes
-
-// export const getCookie = async (name) => {
-//   try {
-//     const response = await axios.get(`${COOKIE_URL}/get/:name`, {
-//       name,
-//     });
-//     return response.data;
-//   } catch (e) {
-//     throw e.response.data;
-//   }
-// }
-
-// export const setCookie = async (name, value) => {
-//   try {
-//     const response = await axios.post(`${COOKIE_URL}/set`, {
-//       name,
-//       value,
-//     });
-//     return response.data;
-//   } catch (e) {
-//     throw e.response.data;
-//   }
-// }
-
-// export const deleteCookie = async (name) => {
-//   try {
-//     const response = await axios.delete(`${COOKIE_URL}/delete`, {
-//       name,
-//     });
-//     return response.data;
-//   } catch (e) {
-//     throw e.response.data;
-//   }
-// }
-
-// export const saveUser = async (userData) => {
-//   try {
-//     const response = await axios.post(`${COOKIE_URL}/save-user`, {
-//       userData
-//     }, { withCredentials: true });
-//     return response.data;
-//   } catch (e) {
-//     throw e.response.data;
-//   }
-// }
 
 // Auth Routes
 
@@ -127,14 +79,14 @@ export const updateProfile = async (description, picture, username) => {
 
 // Game Routes
 
-export const createGame = async (name, leader, time, court, sport) => {
+export const createGame = async (name, leader, date, location, sport) => {
 
   try {
-    const response = await axios.post(GAME_URL, {
+    const response = await axios.post(`${GAME_URL}/game`, {
       name,
       leader,
-      time,
-      court,
+      date,
+      location,
       sport,
     });
     response.ok = true;
@@ -157,11 +109,12 @@ export const deleteGame = async ( name, location) => {
   }
 }
 
-export const getGames = async ( location ) => {
+export const getGame = async ( location ) => {
   try {
-    const response = await axios.get(GAME_URL, {
-      location
+    const response = await axios.get(`${GAME_URL}/game`, {
+      params: {location},
     });
+
     response.ok = true;
     return response.data;
   } catch (e) {

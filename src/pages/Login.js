@@ -72,14 +72,6 @@ const Login = () => {
       }
       // calls api to register
       const response = await register(username, password, confirmPassword);
-      
-      // saes user data
-      // const userData = {
-      //   username: response.username
-      // };
-
-      // setUser(userData);
-      // saveUser(userData);
 
       // logs for debugging
       console.log("Registered Successfully", response);

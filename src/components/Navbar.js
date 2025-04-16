@@ -51,7 +51,7 @@ function Navbar() {
               />
               <div className="p-dropdown-content">
                 <a href="/profile">Profile</a>
-                <a href="/login" className="logout-button" onClick={() => handleLogout()}>Log Out</a>
+                <a href="/" className="logout-button" onClick={() => handleLogout()}>Log Out</a>
               </div>
             </div>
           )}

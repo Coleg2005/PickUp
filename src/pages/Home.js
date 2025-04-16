@@ -1,11 +1,26 @@
 import '../App.css';
-import React from 'react';
-import { Box, Button, Grid2, Slider, FormControl, FormControlLabel, Typography, Input, InputLabel, Switch, MenuItem, Select } from '@mui/material';
+import { useState } from 'react';
+import { Divider, Box, Button, Grid2, Slider, FormControl, FormControlLabel, Typography, Input, InputLabel, Switch, MenuItem, Select, Stack } from '@mui/material';
 
-async function FetchData(sport, radius) {
+function getUserCoordinates() {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => resolve(position.coords),
+      (error) => reject(error)
+    );
+  });
+}
+
+
+async function FetchPlaces(sport, radius, setPlaces) {
+
+  const coords = await getUserCoordinates();
+
+  console.log(coords.latitude, coords.longitude);
 
   try{
-    const url = `https://api.foursquare.com/v3/places/search?query=${sport}&ll=38.750660%2C-77.475143&radius=${radius}`;
+
+    const url =`https://api.foursquare.com/v3/places/search?query=${sport}&ll=${coords.latitude}%2C${coords.longitude}&radius=${radius}`;
     const options = {
       method: 'GET',
       headers: {
@@ -21,13 +36,7 @@ async function FetchData(sport, radius) {
     }
 
     const data = await res.json();
-    const placeElement = document.getElementById('park-results');
-    placeElement.innerHTML = '';
-
-    for (let i = 0; i < data.results.length; i++) {
-      const placeName = `<a>${data.results[i].name}</a><br>`;
-      placeElement.innerHTML += placeName;
-    }
+    setPlaces(data.results);
 
   } catch(error) {
     console.error(error);
@@ -36,19 +45,20 @@ async function FetchData(sport, radius) {
 
 const Parks = () => {
 
-  const [sport, setSport] = React.useState('');
-  const [value, setValue] = React.useState(5);
+  const [sport, setSport] = useState('basketball%20court');
+  const [value, setValue] = useState(5);
+  const [places, setPlaces] = useState([]);
 
   const handleDropdownChange = (event) => setSport(event.target.value);
 
-  const handleSliderChange = (event, newValue) => setValue(newValue);
+  const handleSliderChange = (newValue) => setValue(newValue);
 
   const handleInputChange = (event) => setValue(event.target.value === '' ? 1 : Math.max(1, Math.min(25, Number(event.target.value))));
 
   const handleBlur = () => setValue(Math.max(1, Math.min(25, value)));
 
   const fetchData = async () => {
-    await FetchData(sport, value * 1609);
+    await FetchPlaces(sport, value * 1609, setPlaces);
   };
 
   return (
@@ -84,7 +94,7 @@ const Parks = () => {
             <Grid2 container spacing={2} direction="row" sx={{ alignItems: 'center' }}>
               <Grid2 item xs={12}>
                 <Slider 
-                  value={typeof value === 'number' ? value : 0}
+                  value={typeof value === 'number' ? value : 1}
                   onChange={handleSliderChange}
                   aria-labelledby="Radius"
                   min={1}
@@ -116,10 +126,17 @@ const Parks = () => {
         </div>
       </div>
       <div className='park-display' id='park-results'>
-        <p className='result' id='placeName'></p>
+        {places.map((place, index) => (
+          <Box key={index} sx={{ width: '100%' }}>
+            <Stack spacing={2}>
+              <Button variant="contained" href={`/park/${encodeURI(sport)}/${encodeURIComponent(place.name)}`}>{place.name}</Button>
+              <Divider component="li" />
+            </Stack>
+          </Box>
+        ))}
       </div>
-
     </div>
+    
   );
 };
 

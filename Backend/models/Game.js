@@ -10,10 +10,12 @@ const GameSchema = new mongoose.Schema({
   },
   gameMembers: {
     type: [mongoose.Schema.Types.ObjectId],
+    ref: 'User',
     default: []
   },
   leader: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
   date: {

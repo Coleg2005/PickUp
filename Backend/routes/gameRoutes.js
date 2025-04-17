@@ -34,7 +34,7 @@ router.get('/game', async (req, res) => {
     if (!location) {
       return res.status(400).json({ error: 'location is required' });
     }
-    const games = await Game.find({ location: location });
+    const games = await Game.find({ location: location }).populate('gameMembers').populate('leader');
     res.json(games);
   } catch {
     res.status(500).json({ error: 'Error getting game' });
@@ -44,7 +44,7 @@ router.get('/game', async (req, res) => {
 // delete game works
 router.delete('/game', async (req, res) => {
   try {
-    const { name, location } = req.body;
+    const { name, location } = req.query;
     if (!name || !location) {
       return res.status(400).json({ error: 'name and location are required' });
     }
@@ -61,7 +61,7 @@ router.post('/gameMember', async (req, res) => {
   try {
     const { name, location, gameMember } = req.body;
     if (!name || !location || !gameMember) {
-      return res.status(400).json({ error: 'name, location, and gameMember are required' });
+      return res.status(400).json({ error: 'name, location, and gameMember are required', gameMember});
     }
     const game = await Game.findOne({ name, location });
 
@@ -69,41 +69,26 @@ router.post('/gameMember', async (req, res) => {
     if (!member) {
       return res.status(404).json({ error: 'Leader not found' });
     }
+
+    if (game.gameMembers.some((existingMember) => existingMember._id.toString() === member._id.toString())) {
+      return res.status(400).json({ error: 'User already in game' });
+    }
+    console.log('here')
+    console.log(member);
+    console.log(game.gameMembers);
+
     game.gameMembers.push(member._id);
     await game.save();
     res.json({ message: 'Game member added successfully' });
   } catch {
-    res.status(500).json({ error: 'Error adding game member' });
-  }
-});
-
-// get game members works
-router.post('/gameMembers', async (req, res) => {
-  try {
-    const { name, location } = req.body;
-    if (!name || !location) {
-      return res.status(400).json({ error: 'name and location are required' });
-    }
-    const game = await Game.findOne({ name, location });
-    if(!game) {
-      return res.status(404).json({ error: 'Game not found' });
-    }
-    const gameMembers = game.gameMembers;
-    if (!gameMembers || gameMembers.length === 0) {
-      return res.status(404).json({ error: 'No game members found' });
-    }
-    const members = await User.find({ _id: { $in: gameMembers } });
-
-    res.json(members.map(member => member.username));
-  } catch {
-    res.status(500).json({ error: 'Error getting game members' });
+    res.status(500).json({ error: 'Error adding game member', details: error.message });
   }
 });
 
 // remove game member works 
 router.delete('/gameMember', async (req, res) => {
   try {
-    const { name, location, gameMember } = req.body;
+    const { name, location, gameMember } = req.query;
     if(!name || !location || !gameMember) {
       return res.status(400).json({ error: 'name, location, and gameMember are required' });
     }

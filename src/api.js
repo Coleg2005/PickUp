@@ -98,9 +98,11 @@ export const createGame = async (name, leader, date, location, sport) => {
 
 export const deleteGame = async ( name, location) => {
   try {
-    const response = await axios.delete(GAME_URL, {
-      name,
-      location
+    const response = await axios.delete(`${GAME_URL}/game`, {
+      params: {
+        name,
+        location
+      },
     });
     response.ok = true;
     return response.data;
@@ -122,12 +124,13 @@ export const getGame = async ( location ) => {
   }
 }
 
-export const addGameMember = async (name, location, user) => {
+export const addGameMember = async (name, location, gameMember) => {
   try {
-    const response = await axios.post(GAME_URL, {
+    console.log(name, location, gameMember);
+    const response = await axios.post(`${GAME_URL}/gameMember`, {
       name,
       location,
-      user,
+      gameMember
     });
     response.ok = true;
     return response.data;
@@ -136,12 +139,17 @@ export const addGameMember = async (name, location, user) => {
   }
 }
 
-export const removeGameMember = async ( username ) => {
+export const removeGameMember = async ( name, location, gameMember ) => {
   try {
-    const response = await axios.delete(GAME_URL, {
-      username,
-      });
-      response.ok = true;
+    console.log(name, location, gameMember);
+    const response = await axios.delete(`${GAME_URL}/gameMember`, {
+      params: {
+        name,
+        location,
+        gameMember
+      },
+    });
+    response.ok = true;
     return response.data;
   } catch (e) {
     throw e.response.data;

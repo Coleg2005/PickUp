@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Stack, Button, Dialog, TextField, DialogActions, DialogContent, DialogTitle, Divider } from '@mui/material';
+import { Stack, Button, Dialog, TextField, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs/AdapterDayjs.js';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider/LocalizationProvider.js';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker/DatePicker.js';
@@ -7,7 +7,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker/TimePicker.js';
 import dayjs from 'dayjs';
 import { createGame } from '../api.js';
 
-export default function Popup({ location, sport }) {
+export default function Popup({ location, sport, onGameAdded }) {
   const [open, setOpen] = React.useState(false);
   const [date, setDate] = React.useState(dayjs());
   const [time, setTime] = React.useState(dayjs());
@@ -24,6 +24,9 @@ export default function Popup({ location, sport }) {
       const leader = JSON.parse(sessionStorage.getItem('user')).user.username;
       await createGame(name, leader, date, location, sport);
       handleClose();
+      if (onGameAdded) {
+        onGameAdded();
+      }
     } catch (err) {
       console.error('Error submitting game:', err);
     }

@@ -98,7 +98,6 @@ router.post('/login', async (req, res) => {
 router.post('/logout', () => {
   
   // res.clearCookie('userData');
-  sessionStorage.clear();
   return res.json({ message: 'Logged out successfully'});
 });
 

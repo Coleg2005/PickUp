@@ -47,6 +47,7 @@ export const logout = async (name) => {
     const response = await axios.post(`${AUTH_URL}/logout`, {},
       { withCredentials: true }
     );
+    sessionStorage.clear();
     return response.data;
   } catch (e) {
     throw e.response.data;
@@ -79,7 +80,7 @@ export const updateProfile = async (description, picture, username) => {
 
 // Game Routes
 
-export const createGame = async (name, leader, date, location, sport) => {
+export const createGame = async (name, leader, date, location, sport, description) => {
 
   try {
     const response = await axios.post(`${GAME_URL}/game`, {
@@ -88,6 +89,7 @@ export const createGame = async (name, leader, date, location, sport) => {
       date,
       location,
       sport,
+      description,
     });
     response.ok = true;
     return response.data;

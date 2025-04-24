@@ -29,6 +29,9 @@ const GameSchema = new mongoose.Schema({
   sport: {
     type: String,
     required: true
+  },
+  description: {
+    type: String
   }
 });
  

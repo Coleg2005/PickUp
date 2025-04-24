@@ -36,10 +36,10 @@ const Park = () => {
 
   const handleDeleteMember = async (gname) => {
     try {
-      const response = await removeGameMember(gname, location);
+      const response = await removeGameMember(gname, location, username);
 
       setRefresh((prev) => !prev);
-      console.log("Successfullt Removed User:", response);
+      console.log("Successfully Removed User:", response);
     } catch (error) {
       console.error('Error removing game member:', error);
     }
@@ -82,6 +82,7 @@ const Park = () => {
               <Box key={index} sx={{ width: '100%' }}>
                 <Stack spacing={2}>
                   <p>Game Name: {game.name}</p>
+                  <p>Game Description: {game.description}</p>
                   <p>Game Leader: {game.leader.username}</p>
                   {game.leader.username === username && (
                     <Button onClick={() => handleDeleteGame(game.name)}>Delete Game</Button>

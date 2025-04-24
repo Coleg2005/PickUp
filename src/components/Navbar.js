@@ -9,6 +9,7 @@ function Navbar() {
 
   const handleLogout = async () => {
     try {
+      sessionStorage.clear();
       await logout();
       setUser(null);
     } catch (error) {

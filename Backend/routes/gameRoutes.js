@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/game', async (req, res) => {
 
   try {
-    const { name, date, location, sport, leader } = req.body;
+    const { name, date, location, sport, leader, description } = req.body;
     if (!name || !date || !location || !sport || !leader ) {
       return res.status(400).json({ error: 'name, date, location, sport, and leader are required' });
     }
@@ -17,7 +17,7 @@ router.post('/game', async (req, res) => {
     if (!leadUser) {
       return res.status(404).json({ error: 'Leader not found' });
     }
-    const game = new Game({ name, date, location, sport, leader: leadUser._id });
+    const game = new Game({ name, gameMembers: [leadUser], date, location, sport, leader: leadUser._id, description: description });
     await game.save();
 
     res.status(201).json({ message: 'Game created successfully' });
@@ -73,9 +73,6 @@ router.post('/gameMember', async (req, res) => {
     if (game.gameMembers.some((existingMember) => existingMember._id.toString() === member._id.toString())) {
       return res.status(400).json({ error: 'User already in game' });
     }
-    console.log('here')
-    console.log(member);
-    console.log(game.gameMembers);
 
     game.gameMembers.push(member._id);
     await game.save();

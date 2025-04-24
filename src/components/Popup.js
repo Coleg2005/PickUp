@@ -12,6 +12,7 @@ export default function Popup({ location, sport, onGameAdded }) {
   const [date, setDate] = React.useState(dayjs());
   const [time, setTime] = React.useState(dayjs());
   const [name, setName] = React.useState('');
+  const [desc, setDesc] = React.useState('');
 
   const handleClickOpen = () => {setOpen(true)};
 
@@ -22,7 +23,7 @@ export default function Popup({ location, sport, onGameAdded }) {
     try {
       // name, leader, date, location, sport
       const leader = JSON.parse(sessionStorage.getItem('user')).user.username;
-      await createGame(name, leader, date, location, sport);
+      await createGame(name, leader, date, location, sport, desc);
       handleClose();
       if (onGameAdded) {
         onGameAdded();
@@ -94,6 +95,19 @@ export default function Popup({ location, sport, onGameAdded }) {
               variant="standard"
               value={name}
               onChange={(e) => setName(e.target.value)}
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              // id="desc"
+              // name="desc"
+              label="Game Description"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={desc}
+              onChange={(e) => setDesc(e.target.value)}
             />
           </DialogContent>
           <DialogActions>

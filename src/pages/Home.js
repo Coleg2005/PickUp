@@ -1,6 +1,7 @@
 import '../App.css';
-import { useState } from 'react';
-import { Divider, Box, Button, Grid2, Slider, FormControl, FormControlLabel, Typography, Input, InputLabel, Switch, MenuItem, Select, Stack } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Divider, Box, Button, Slider, FormControl, FormControlLabel, Input, InputLabel, Switch, MenuItem, Select, Stack } from '@mui/material';
+import { getGame } from '../api.js';
 
 function getUserCoordinates() {
   return new Promise((resolve, reject) => {
@@ -12,7 +13,7 @@ function getUserCoordinates() {
 }
 
 
-async function FetchPlaces(sport, radius, setPlaces) {
+async function FetchPlaces(sport, radius, setPlaces, gameOnly) {
 
   const coords = await getUserCoordinates();
 
@@ -36,7 +37,26 @@ async function FetchPlaces(sport, radius, setPlaces) {
     }
 
     const data = await res.json();
-    setPlaces(data.results);
+    
+    let filteredResults = data.results;
+
+    if (gameOnly) {
+      // Fetch games for each location in data.results
+      const resultsWithGames = await Promise.all(
+        data.results.map(async (place) => {
+          const games = await getGame(place.name); // Fetch games for the specific location
+          if (games.length > 0) {
+            return place; // Include the place if it has games
+          }
+          return null; // Exclude the place if it has no games
+        })
+      );
+
+      // Filter out null values (places without games)
+      filteredResults = resultsWithGames.filter((place) => place !== null);
+    }
+
+    setPlaces(filteredResults);
 
   } catch(error) {
     console.error(error);
@@ -46,20 +66,40 @@ async function FetchPlaces(sport, radius, setPlaces) {
 const Parks = () => {
 
   const [sport, setSport] = useState('basketball%20court');
-  const [value, setValue] = useState(5);
+  const [radius, setRadius] = useState(5);
   const [places, setPlaces] = useState([]);
+  const [gameOnly, setGameOnly] = useState(false);
 
   const handleDropdownChange = (event) => setSport(event.target.value);
 
-  const handleSliderChange = (newValue) => setValue(newValue);
+  const handleSliderChange = (event, newRadius) => setRadius(newRadius);
 
-  const handleInputChange = (event) => setValue(event.target.value === '' ? 1 : Math.max(1, Math.min(25, Number(event.target.value))));
+  const handleInputChange = (event) => setRadius(event.target.value === '' ? 1 : Math.max(1, Math.min(25, Number(event.target.value))));
 
-  const handleBlur = () => setValue(Math.max(1, Math.min(25, value)));
+  const handleSwitchChange = (event) => {
+    setGameOnly(event.target.checked); // Update the state based on the Switch's value
+    console.log('Switch toggled:', event.target.checked); // Log the new state
+  }
 
+  const handleBlur = () => setRadius(Math.max(1, Math.min(25, radius)));
+
+  // Define fetchData function within component
   const fetchData = async () => {
-    await FetchPlaces(sport, value * 1609, setPlaces);
+    try {
+      await FetchPlaces(sport, radius * 1609, setPlaces, gameOnly);
+    } catch (error) {
+      console.error('Error Loading Places:', error);
+    }
   };
+
+  useEffect (() => {
+    fetchData();
+  });
+
+  // // Use useEffect to call fetchData when gameOnly changes
+  // useEffect(() => {
+  //   fetchData();
+  // }, [gameOnly, sport, radius]);
 
   return (
     <div className='parks'>
@@ -88,41 +128,31 @@ const Parks = () => {
         </div>
         <h3 className='radius-header'>Search Radius (miles)</h3>
         <div className='Radius-slider'>
-          <Box sx={{ width: 200 }}>
-            <Typography id="input-slider" gutterBottom>
-            </Typography>
-            <Grid2 container spacing={2} direction="row" sx={{ alignItems: 'center' }}>
-              <Grid2 item xs={12}>
-                <Slider 
-                  value={typeof value === 'number' ? value : 1}
-                  onChange={handleSliderChange}
-                  aria-labelledby="Radius"
-                  min={1}
-                  max={25}
-                  sx={{ width: "100%" }}
-                />
-              </Grid2>
-              <Grid2 item>
-                <Input
-                  value={value}
-                  size="small"
-                  onChange={handleInputChange}
-                  onBlur={handleBlur}
-                  inputProps={{
-                    step: 1,
-                    min: 1,
-                    max: 25,
-                    type: 'number',
-                    'aria-labelledby': 'input-slider',
-                  }}
-                />
-              </Grid2>
-            </Grid2>
-          </Box>
+        <Box sx={{ width: 200, mb: 2 }}>
+          <Slider 
+            value={typeof radius === 'number' ? radius : 1}
+            onChange={handleSliderChange}
+            aria-labelledby="Radius"
+            min={1}
+            max={25}
+          />
+          <Input
+            value={radius}
+            size="small"
+            onChange={handleInputChange}
+            onBlur={handleBlur}
+            inputProps={{
+              step: 1,
+              min: 1,
+              max: 25,
+              type: 'number',
+              'aria-labelledby': 'input-slider',
+            }}
+          />
+        </Box>
         </div>
-        <h3 className='team-switch'>Switch to search for courts with existing teams</h3>
         <div>
-          <FormControlLabel control={<Switch />} />        
+          <FormControlLabel label='Switch to search for courts with existing teams' control={<Switch checked={gameOnly} onChange={handleSwitchChange}/>} />
         </div>
       </div>
       <div className='park-display' id='park-results'>
